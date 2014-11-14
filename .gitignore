@@ -34,7 +34,7 @@ src_managed
 */*/project/boot
 
 # db
-lift_proto*
+hays_index*
 
 # other scm
 .svn
@@ -53,4 +53,7 @@ lift_proto*
 
 # Pax Runner (for easy OSGi launching)
 runner
+
+# Index Files
+*.idx
 

@@ -1,12 +1,15 @@
 package com.austindata
 
+import scala.io.Source
+import com.typesafe.scalalogging.LazyLogging
 import java.sql.Date
+import DBHelpers._
 
 sealed trait RecordType
 case object ThreeCharRecordType extends RecordType
 case object TwoCharRecordType extends RecordType
 
-object IndexParser {
+object IndexParser extends LazyLogging {
 
   type Line = String
 
@@ -92,7 +95,10 @@ object IndexParser {
     }
   }
 
-  private def parseLine(line: Line) = {
+  /* Parse each line and insert into Database */
+  private def parseLine(line: Line) {
+    logger.info(s"Processing line: $line")
+
     val indexId = parseIndexId(line)
     val party1 = parseParty1(line)
     val party2 = parseParty2(line)
@@ -103,21 +109,22 @@ object IndexParser {
     val fileDate = formatDate(parseFileDate(line, recordType))
     val rest = parseRest(line, recordType)
 
-    IndexRecord(indexId, party1, party2, documentType, recordTypeName, volume, page, fileDate, rest)
+    insert(IndexRecord(indexId, party1, party2, documentType, recordTypeName, volume, page, fileDate, rest))
+
   }
 
-  def apply(line: Line) = parseLine(line)
-}
+  def parse = {
 
-/**
- * REPL Example
- * val line1 = "00000007SOUTHMAYD JOHN ALLEN                    JAMES ALFRED F                          WARRANTY DEED       OPR0000A00940223185006251846SEE INSTRUMENT                               "
- *
- * val line2 = "00000148LEHMANN WM                              DUESTERHEFT A E                         RELEASE OF LIEN     DT0000S05330203191711:1501081917T WESTBROOK SUR      146.75ACS               "
- *
- * import com.austindata._
- *
- * val record1 = IndexParser(line1)
- *
- * val record2 = IndexParser(line2)
- */
+    //dropTables
+
+    createTables
+
+    /* Parse the file in parallel */
+    val iterator = Source.fromURL(getClass.getResource("/" + indexFileName)).getLines.grouped(10000)
+    iterator.foreach { lines =>
+      lines.par.foreach { line => parseLine(line) }
+    }
+  }
+
+  def apply() = parse
+}
