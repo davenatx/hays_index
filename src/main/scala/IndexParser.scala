@@ -2,9 +2,6 @@ package com.austindata
 
 import java.sql.Date
 
-case class IndexRecord(fileName: String, party1: String, party2: String, documentType: String, recordType: String, volume: String, page: String,
-  fileDate: Date, rest: String)
-
 sealed trait RecordType
 case object ThreeCharRecordType extends RecordType
 case object TwoCharRecordType extends RecordType
@@ -94,8 +91,6 @@ object IndexParser {
       page.toInt.toString
     }
   }
-
-  /**ToDo - Format Volume and Page */
 
   private def parseLine(line: Line) = {
     val indexId = parseIndexId(line)
