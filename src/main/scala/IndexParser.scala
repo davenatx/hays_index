@@ -113,6 +113,7 @@ object IndexParser extends LazyLogging {
 
   }
 
+  /* Setup Database Tables and parse the index file */
   def parse = {
 
     //dropTables
@@ -128,3 +129,8 @@ object IndexParser extends LazyLogging {
 
   def apply() = parse
 }
+/** 
+ * REPL
+ * import com.austindata._
+ * IndexParser()
+ */

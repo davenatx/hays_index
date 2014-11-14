@@ -59,5 +59,4 @@ object DBHelpers {
       indexRecords ++= records
     }
   }
-  //    val indexRecord = IndexRecord("00000007", "SOUTHMAYD JOHN ALLEN", "JAMES ALFRED F", "WARRANTY DEED", "OPR", "A", "940", Date.valueOf("1850-02-23"), "006251846SEE INSTRUMENT")
 }
