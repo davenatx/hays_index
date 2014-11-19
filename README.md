@@ -11,3 +11,10 @@ To access the H2 Database, start the H2 Monitor (H2 Console) and use the followi
 * JDBC URL: jdbc:h2:C:/Hays_Index_DB/hays_index;AUTO_SERVER=TRUE
 * User Name: sa
 * Password:
+
+Example Query
+-------------
+SELECT DISTINCT RECTYP, DOCTYP, VOLUME, PAGE, FILEDATE, FNAME
+FROM INDEX_RECORDS
+WHERE EXTRACT(YEAR FROM FILEDATE) = 1920 AND RECTYP = 'OPR'
+ORDER BY VOLUME, PAGE, FILEDATE
