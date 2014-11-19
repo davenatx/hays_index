@@ -35,27 +35,27 @@ object DBHelpers {
 
   /* Create the tables */
   def createTables {
-    DB() withSession { implicit session =>
+    database withSession { implicit session =>
       indexRecords.ddl.create
     }
   }
 
   /* Drop the tables */
   def dropTables {
-    DB() withSession { implicit session =>
+    database withSession { implicit session =>
       indexRecords.ddl.drop
     }
   }
 
   /* Insert one IndexRecord into IndexRecords */
   def insert(record: IndexRecord) {
-    DB() withSession { implicit session =>
+    database withSession { implicit session =>
       indexRecords += (record)
     }
   }
   /* Batch Insert a sequence of IndexRecord into IndexRecords */
   def insert(records: Seq[IndexRecord]) {
-    DB() withSession { implicit session =>
+    database withSession { implicit session =>
       indexRecords ++= records
     }
   }

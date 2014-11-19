@@ -97,8 +97,6 @@ object IndexParser extends LazyLogging {
 
   /* Parse each line and insert into Database */
   private def parseLine(line: Line) {
-    logger.info(s"Processing line: $line")
-
     val indexId = parseIndexId(line)
     val party1 = parseParty1(line)
     val party2 = parseParty2(line)
@@ -108,6 +106,8 @@ object IndexParser extends LazyLogging {
     val page = formatPage(parsePage(line, recordType))
     val fileDate = formatDate(parseFileDate(line, recordType))
     val rest = parseRest(line, recordType)
+
+    logger.info(s"Parsing IndexId: $indexId")
 
     insert(IndexRecord(indexId, party1, party2, documentType, recordTypeName, volume, page, fileDate, rest))
 
@@ -121,7 +121,7 @@ object IndexParser extends LazyLogging {
     createTables
 
     /* Parse the file in parallel */
-    val iterator = Source.fromURL(getClass.getResource("/" + indexFileName)).getLines.grouped(10000)
+    val iterator = Source.fromFile(indexFile).getLines.grouped(10000) //Source.fromURL(getClass.getResource("/" + indexFileName)).getLines.grouped(10000)
     iterator.foreach { lines =>
       lines.par.foreach { line => parseLine(line) }
     }
@@ -129,8 +129,10 @@ object IndexParser extends LazyLogging {
 
   def apply() = parse
 }
-/** 
- * REPL
- * import com.austindata._
- * IndexParser()
+
+/**
+ * Parse the Index and insert into the database
  */
+object ImportIndex extends App {
+  IndexParser()
+}
