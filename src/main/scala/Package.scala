@@ -18,6 +18,8 @@ package object austindata {
 
   val dataSource = {
     val config = new HikariConfig
+
+    config.setDriverClassName(dbDriver)
     config.setJdbcUrl(dbUrl)
     config.setUsername("sa")
     config.setPassword("")
