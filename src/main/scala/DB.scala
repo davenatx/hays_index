@@ -5,11 +5,12 @@ import scala.slick.jdbc.{ StaticQuery => Q }
 
 import java.sql.Date
 
-/* Case Class representing a parsed Index Record. */
+/* Domain Object representing a parsed Index Record */
 case class IndexRecord(fileName: String, party1: String, party2: String, documentType: String, recordType: String, volume: String, page: String,
   fileDate: Date, rest: String, id: Option[Int] = None)
 
-case class RenameRecord(recordType: String, documentType: String, volume: String, page: String, fileDate: Date, fileName: String)
+/* Domain object representing the fields returned by OPRRecordsByYear */
+case class QueryRecord(recordType: String, documentType: String, volume: String, page: String, fileDate: Date, fileName: String)
 
 /* Slick Table object.  The * projection has bi-directional mapping (<>) to IndexRecord */
 class IndexRecords(tag: Tag)
@@ -64,7 +65,7 @@ object DBHelpers {
   }
 
   /* Query OPR Records by Year.  This is a distinct query becuase records can be represented multiple times due to the number of parties, etc... */
-  def OPRRecordsByYear(year: String): List[RenameRecord] = {
+  def OPRRecordsByYear(year: String): List[QueryRecord] = {
     database withSession { implicit session =>
 
       val query = Q.query[String, (String, String, String, String, Date, String)]("""
@@ -73,7 +74,7 @@ object DBHelpers {
       WHERE EXTRACT(YEAR FROM FILEDATE) = ? AND RECTYP = 'OPR' ORDER BY VOLUME, PAGE, FILEDATE 
     """)
 
-      query(year).list map (r => RenameRecord(r._1, r._2, r._3, r._4, r._5, r._6))
+      query(year).list map (r => QueryRecord(r._1, r._2, r._3, r._4, r._5, r._6))
     }
   }
 }

@@ -12,6 +12,11 @@ import javax.sql.DataSource
 package object austindata {
   private val config = ConfigFactory.load("settings.properties")
 
+  /* Program Properties */
+  lazy val yearToProcess = config.getString("yearToProcess")
+  lazy val inputDirectory = config.getString("inputDirectory")
+
+  /* DB Properties */
   lazy val dbUrl = config.getString("dbUrl")
   lazy val dbDriver = config.getString("dbDriver")
   lazy val indexFile = config.getString("indexFile")
