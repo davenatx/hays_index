@@ -106,9 +106,12 @@ object RenameHelpers extends LazyLogging {
         case true => {
           newFileExists(head.newFileName, head.recordType) match {
             case true => {
-              logger.warn("New File already exists in output directory!  Volume: " + head.volume + " ,Page: "
+              logger.warn("New File already exists in output directory! Appending an A to the end. Volume: " + head.volume + " ,Page: "
                 + head.page + " ,Filename: " + head.fileName + " ,NewFilename: " + head.newFileName)
-              processRenameRecords(tail)
+
+              // Duplicate rename record with "A" appending to the end of the newFileName.  Then Prepend to tail in recursive call
+              val updatedRecord = head.copy(newFileName = head.newFileName + "A")
+              processRenameRecords(updatedRecord :: tail)
             }
             case false => {
               // Perform renaming
