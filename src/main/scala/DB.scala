@@ -64,7 +64,7 @@ object DBHelpers {
     }
   }
 
-  /* Query OPR Records by Year.  This is a distinct query becuase records can be represented multiple times due to the number of parties, etc... */
+  /* Query OPR Records by Year.  This is a distinct query because records can be represented multiple times due to the number of parties, etc... */
   def OPRRecordsByYear(year: String): List[QueryRecord] = {
     database withSession { implicit session =>
 
@@ -72,6 +72,20 @@ object DBHelpers {
       SELECT DISTINCT RECTYP, DOCTYP, VOLUME, PAGE, FILEDATE, FNAME 
       FROM INDEX_RECORDS 
       WHERE EXTRACT(YEAR FROM FILEDATE) = ? AND RECTYP = 'OPR' ORDER BY VOLUME, PAGE, FILEDATE 
+    """)
+
+      query(year).list map (r => QueryRecord(r._1, r._2, r._3, r._4, r._5, r._6))
+    }
+  }
+
+  /* Query Records by Year.  This is a distinct query because records can be represented multiple times due to the number of parties, etc... */
+  def recordsByYear(year: String): List[QueryRecord] = {
+    database withSession { implicit session =>
+
+      val query = Q.query[String, (String, String, String, String, Date, String)]("""
+      SELECT DISTINCT RECTYP, DOCTYP, VOLUME, PAGE, FILEDATE, FNAME 
+      FROM INDEX_RECORDS 
+      WHERE EXTRACT(YEAR FROM FILEDATE) = ? ORDER BY VOLUME, PAGE, FILEDATE 
     """)
 
       query(year).list map (r => QueryRecord(r._1, r._2, r._3, r._4, r._5, r._6))
