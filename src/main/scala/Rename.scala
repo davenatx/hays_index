@@ -66,7 +66,7 @@ object RenameHelpers extends LazyLogging {
 
   /* Transform QueryRecord to RenameRecord.  This transformatoin also creates the newFileName */
   def getRenameRecords(year: String): List[RenameRecord] = {
-    OPRRecordsByYear(year) map (r => RenameRecord(
+    recordsByYear(year) map (r => RenameRecord(
       r.recordType,
       r.documentType,
       r.volume,
