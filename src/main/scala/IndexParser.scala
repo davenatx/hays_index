@@ -134,5 +134,6 @@ object IndexParser extends LazyLogging {
  * Parse the Index and insert into the database
  */
 object ImportIndex extends App {
+  throw new RuntimeException("The index has already been imported!  This is here to prevent me from accidently running this application")
   IndexParser()
 }
