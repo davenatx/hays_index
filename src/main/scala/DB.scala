@@ -69,9 +69,9 @@ object DBHelpers {
     database withSession { implicit session =>
 
       val query = Q.query[String, (String, String, String, String, Date, String)]("""
-      SELECT DISTINCT RECTYP, DOCTYP, VOLUME, PAGE, FILEDATE, FNAME 
+      SELECT DISTINCT RECTYP, DOCTYP, VOLUME, CAST(PAGE as INT), FILEDATE, FNAME 
       FROM INDEX_RECORDS 
-      WHERE EXTRACT(YEAR FROM FILEDATE) = ? AND RECTYP = 'OPR' ORDER BY VOLUME, PAGE, FILEDATE 
+      WHERE EXTRACT(YEAR FROM FILEDATE) = ? AND RECTYP = 'OPR' ORDER BY VOLUME, CAST(PAGE as INT), FNAME 
     """)
 
       query(year).list map (r => QueryRecord(r._1, r._2, r._3, r._4, r._5, r._6))
